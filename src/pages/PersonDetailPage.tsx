@@ -53,7 +53,7 @@ export function PersonDetailPage({
         돌아가기
       </button>
       <section className="card overflow-hidden">
-        <div className={`h-1.5 ${riskStyle[person.risk].dot}`} />
+        <div className={`h-1.5 ${riskStyle[isResolved ? "정상" : person.risk].dot}`} />
         <div className="p-5 sm:p-6">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
             <div className="flex gap-4">

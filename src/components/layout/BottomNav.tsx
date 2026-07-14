@@ -9,9 +9,11 @@ const items = [
 export function BottomNav({
   page,
   setPage,
+  alertCount,
 }: {
   page: Page;
   setPage: (p: Page) => void;
+  alertCount: number;
 }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-[1000] grid min-h-[72px] grid-cols-4 border-t border-slate-200 bg-white/95 px-2 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl lg:hidden">
@@ -25,7 +27,7 @@ export function BottomNav({
             className={`relative rounded-xl p-1 transition ${page === id ? "bg-brand-50 -translate-y-0.5" : ""}`}
           >
             <Icon size={20} />
-            {id === "alerts" && (
+            {id === "alerts" && alertCount > 0 && (
               <i className="absolute right-0 top-0 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
             )}
           </span>

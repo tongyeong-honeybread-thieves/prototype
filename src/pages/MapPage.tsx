@@ -5,21 +5,22 @@ import { PersonRow } from "../components/people/PersonRow";
 import { districts, people } from "../data/mockData";
 import type { Person, Risk } from "../types";
 
-export function MapPage({ onSelect }: { onSelect: (p: Person) => void }) {
+export function MapPage({ onSelect, resolvedPersonIds }: { onSelect: (p: Person) => void; resolvedPersonIds: Set<number> }) {
   const [risk, setRisk] = useState<Risk | "전체">("전체");
   const [district, setDistrict] = useState("전체 지역");
   const [query, setQuery] = useState("");
   const [panel, setPanel] = useState(true);
   const [focusedPersonId, setFocusedPersonId] = useState<number | null>(null);
+  const effectivePeople = useMemo(() => people.map(person => resolvedPersonIds.has(person.id) ? { ...person, risk: "정상" as const } : person), [resolvedPersonIds]);
   const shown = useMemo(
     () =>
-      people.filter(
+      effectivePeople.filter(
         (p) =>
           (risk === "전체" || p.risk === risk) &&
           (district === "전체 지역" || p.district === district) &&
           p.name.includes(query),
       ),
-    [risk, district, query],
+    [risk, district, query, effectivePeople],
   );
   return (
     <div className="relative h-[calc(100dvh-136px)] min-h-[420px] overflow-hidden lg:h-[calc(100dvh-80px)] lg:min-h-[600px]">

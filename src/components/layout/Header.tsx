@@ -3,10 +3,12 @@ export function Header({
   title,
   onMenu,
   onAlerts,
+  alertCount,
 }: {
   title: string;
   onMenu: () => void;
   onAlerts: () => void;
+  alertCount: number;
 }) {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200/80 bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:h-20 lg:px-8">
@@ -37,7 +39,7 @@ export function Header({
           className="focus-ring group relative rounded-xl border border-slate-200 bg-white p-2.5 text-slate-600 transition hover:-translate-y-0.5 hover:border-brand-200 hover:text-brand-700 hover:shadow-md active:translate-y-0"
         >
           <Bell size={19} className="group-hover:rotate-6" />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
+          {alertCount > 0 && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />}
         </button>
       </div>
     </header>

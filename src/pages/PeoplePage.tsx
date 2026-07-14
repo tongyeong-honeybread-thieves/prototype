@@ -11,20 +11,21 @@ import type { Person, Risk } from "../types";
 import { PersonRow } from "../components/people/PersonRow";
 import { RiskBadge } from "../components/ui/RiskBadge";
 
-export function PeoplePage({ onSelect }: { onSelect: (p: Person) => void }) {
+export function PeoplePage({ onSelect, resolvedPersonIds }: { onSelect: (p: Person) => void; resolvedPersonIds: Set<number> }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Risk | "전체">("전체");
   const [district, setDistrict] = useState("전체 지역");
   const [view, setView] = useState<"list" | "grid">("list");
+  const effectivePeople = useMemo(() => people.map(person => resolvedPersonIds.has(person.id) ? { ...person, risk: "정상" as const } : person), [resolvedPersonIds]);
   const shown = useMemo(
     () =>
-      people.filter(
+      effectivePeople.filter(
         (p) =>
           (filter === "전체" || p.risk === filter) &&
           (district === "전체 지역" || p.district === district) &&
           (p.name.includes(query) || p.address.includes(query)),
       ),
-    [filter, district, query],
+    [filter, district, query, effectivePeople],
   );
   return (
     <div className="p-4 pb-24 sm:p-6 lg:p-8">

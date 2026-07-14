@@ -188,6 +188,11 @@ const centers: Record<string, [number, number]> = {
   진해구: [35.153, 128.704],
 };
 
+const seededOffset = (seed: number) => {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+};
+
 export const people: Person[] = [
   ...core.map((p) => ({ ...p, manager: "이하늘" })),
   ...names.map((name, i): Person => {
@@ -201,8 +206,8 @@ export const people: Person[] = [
       gender: i % 3 === 0 ? "남" : "여",
       district,
       address: `창원시 ${district} ${["중동", "상남동", "월영동", "합성동", "석동"][i % 5]}`,
-      lat: c[0] + ((i % 5) - 2) * 0.006,
-      lng: c[1] + ((i % 7) - 3) * 0.006,
+      lat: c[0] + (seededOffset(i + 11) - 0.5) * 0.022,
+      lng: c[1] + (seededOffset(i + 47) - 0.5) * 0.03,
       risk,
       lastActive: `오늘 ${String(7 + (i % 4)).padStart(2, "0")}:${String((i * 13) % 60).padStart(2, "0")}`,
       inactiveHours: risk === "주의" ? 5 : risk === "관심" ? 2 : 0,

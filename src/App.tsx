@@ -46,6 +46,7 @@ export default function App() {
           title={title}
           onMenu={() => setMenu(true)}
           onAlerts={() => navigate("alerts")}
+          alertCount={unresolvedAlertCount}
         />
         {selected ? (
           <PersonDetailPage
@@ -57,14 +58,14 @@ export default function App() {
         ) : page === "dashboard" ? (
           <DashboardPage onSelect={setSelected} setPage={navigate} resolvedPersonIds={resolvedPersonIds} />
         ) : page === "map" ? (
-          <MapPage onSelect={setSelected} />
+          <MapPage onSelect={setSelected} resolvedPersonIds={resolvedPersonIds} />
         ) : page === "people" ? (
-          <PeoplePage onSelect={setSelected} />
+          <PeoplePage onSelect={setSelected} resolvedPersonIds={resolvedPersonIds} />
         ) : (
           <AlertsPage onSelect={setSelected} resolvedPersonIds={resolvedPersonIds} onResolve={personId => setResolvedPersonIds(current => new Set(current).add(personId))} />
         )}
       </main>
-      {!selected && <BottomNav page={page} setPage={navigate} />}
+      {!selected && <BottomNav page={page} setPage={navigate} alertCount={unresolvedAlertCount} />}
     </div>
   );
 }

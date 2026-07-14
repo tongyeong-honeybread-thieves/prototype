@@ -73,6 +73,11 @@
 @keyframes lightbar-left { 0%, 45% { opacity: 1; filter: brightness(1.45); } 50%, 95% { opacity: .18; filter: brightness(.7); } 100% { opacity: 1; } }
 @keyframes lightbar-right { 0%, 45% { opacity: .18; filter: brightness(.7); } 50%, 95% { opacity: 1; filter: brightness(1.45); } 100% { opacity: .18; } }
 @keyframes siren-wiggle { 0%,100% { transform: rotate(-8deg) scale(1); } 50% { transform: rotate(8deg) scale(1.12); } }
+@keyframes modal-border-siren {
+  0%, 44% { background: linear-gradient(90deg, #f43f5e 0 50%, #2563eb 50% 100%); filter: brightness(1.35); }
+  50%, 94% { background: linear-gradient(90deg, #2563eb 0 50%, #f43f5e 50% 100%); filter: brightness(.9); }
+  100% { background: linear-gradient(90deg, #f43f5e 0 50%, #2563eb 50% 100%); filter: brightness(1.35); }
+}
 @keyframes emergency-neon-block {
   0%, 100% {
     background-color: #dc2626;
@@ -94,7 +99,7 @@
 .emergency-row > button { background: #fff !important; border-color: rgba(255,255,255,.8) !important; color: #b91c1c !important; box-shadow: 0 2px 8px rgba(127,29,29,.22); }
 .emergency-row > button:hover { background: #fef2f2 !important; color: #991b1b !important; }
 .emergency-modal { animation: none; }
-.emergency-modal::before { content: ''; position: absolute; inset: 0 0 auto; z-index: 30; height: 7px; background: linear-gradient(90deg,#f43f5e 0 50%,#2563eb 50% 100%); animation: lightbar-left .4s steps(1,end) infinite alternate; }
+.emergency-modal::before { content: ''; position: absolute; inset: 0 0 auto; z-index: 30; height: 7px; background: linear-gradient(90deg, #f43f5e 0 50%, #2563eb 50% 100%); animation: modal-border-siren .8s steps(1,end) infinite; }
 .siren-lightbar { position: absolute; inset: 0 0 auto; z-index: 20; display: grid; height: 7px; grid-template-columns: 1fr 1fr; }
 .siren-lightbar i:first-child { background: #f43f5e; animation: lightbar-left .8s steps(1,end) infinite; }
 .siren-lightbar i:last-child { background: #2563eb; animation: lightbar-right .8s steps(1,end) infinite; }

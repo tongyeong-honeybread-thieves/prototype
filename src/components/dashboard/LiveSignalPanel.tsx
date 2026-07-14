@@ -7,9 +7,9 @@ import { RiskBadge } from '../ui/RiskBadge'
 
 const priority: Record<Risk, number> = { 긴급: 0, 주의: 1, 관심: 2, 정상: 3 }
 
-export function LiveSignalPanel({ onSelect }: { onSelect: (person: Person) => void }) {
+export function LiveSignalPanel({ onSelect, resolvedPersonIds }: { onSelect: (person: Person) => void; resolvedPersonIds: Set<number> }) {
   const { measurements, lastUpdated } = useLiveMeasurements()
-  const visible = useMemo(() => measurements.map(measurement => ({ measurement, person: people.find(person => person.id === measurement.personId)! })).filter(item => item.person.risk !== '정상').sort((a, b) => priority[a.person.risk] - priority[b.person.risk] || Math.abs(b.measurement.deviationPercent) - Math.abs(a.measurement.deviationPercent)).slice(0, 6), [measurements])
+  const visible = useMemo(() => measurements.map(measurement => ({ measurement, person: people.find(person => person.id === measurement.personId)! })).filter(item => item.person.risk !== '정상' && !resolvedPersonIds.has(item.person.id)).sort((a, b) => priority[a.person.risk] - priority[b.person.risk] || Math.abs(b.measurement.deviationPercent) - Math.abs(a.measurement.deviationPercent)).slice(0, 6), [measurements, resolvedPersonIds])
   const time = lastUpdated.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
   return <section className="card overflow-hidden">

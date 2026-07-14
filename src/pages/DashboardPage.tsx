@@ -73,7 +73,7 @@ export function DashboardPage({
           </h3>
         </div>
         <p className="text-sm font-medium text-slate-500">
-          <span className="font-bold text-rose-600">긴급 대상자 2명</span>의
+          <span className="font-bold text-rose-600">긴급 대상자 {stats[1].value}명</span>의
           확인이 필요해요.
         </p>
       </motion.section>
@@ -113,7 +113,7 @@ export function DashboardPage({
           </button>
         ))}
       </motion.section>
-      <motion.div variants={introItem}><LiveSignalPanel onSelect={onSelect} /></motion.div>
+      <motion.div variants={introItem}><LiveSignalPanel onSelect={onSelect} resolvedPersonIds={resolvedPersonIds} /></motion.div>
       <motion.section variants={introItem} className="grid gap-5 xl:grid-cols-[1.45fr_.85fr]">
         <div className="card overflow-hidden transition hover:shadow-lg">
           <div className="flex items-center justify-between px-5 py-4">
@@ -179,13 +179,13 @@ export function DashboardPage({
               오늘의 확인 현황
             </h3>
             <p className="mt-1 text-xs text-slate-500">
-              담당 대상자 48명 중 32명의 생활 신호가 확인됐어요
+              담당 대상자 48명 중 {32 + resolvedPersonIds.size}명의 생활 신호가 확인됐어요
             </p>
           </div>
-          <b className="text-brand-700">67%</b>
+          <b className="text-brand-700">{Math.round((32 + resolvedPersonIds.size) / 48 * 100)}%</b>
         </div>
         <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-100">
-          <div className="h-full w-2/3 rounded-full bg-brand-500 transition-all duration-500 group-hover:bg-brand-600" />
+          <div className="h-full rounded-full bg-brand-500 transition-all duration-500 group-hover:bg-brand-600" style={{ width: `${Math.min(100, Math.round((32 + resolvedPersonIds.size) / 48 * 100))}%` }} />
         </div>
       </motion.button>
     </motion.div>
