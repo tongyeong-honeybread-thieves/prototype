@@ -1,8 +1,10 @@
 import {
+  Activity,
   Bell,
   LayoutDashboard,
   Map,
   ShieldCheck,
+  UserCog,
   UsersRound,
   X,
 } from "lucide-react";
@@ -11,7 +13,9 @@ import type { Page } from "../../types";
 const items = [
   { id: "dashboard" as Page, label: "대시보드", icon: LayoutDashboard },
   { id: "map" as Page, label: "지도 모니터링", icon: Map },
+  { id: "power" as Page, label: "전력 모니터링", icon: Activity },
   { id: "people" as Page, label: "대상자 관리", icon: UsersRound },
+  { id: "assignments" as Page, label: "담당자 배정", icon: UserCog },
   { id: "alerts" as Page, label: "이상 징후·알림", icon: Bell },
 ];
 export function Sidebar({
@@ -51,7 +55,7 @@ export function Sidebar({
               <p className="text-[11px] font-bold text-brand-600">
                 생활안전 모니터링
               </p>
-              <h1 className="font-extrabold tracking-tight">통영 꿀빵도둑</h1>
+              <h1 className="font-extrabold tracking-tight">하루결</h1>
             </div>
           </button>
           <button
@@ -90,12 +94,12 @@ export function Sidebar({
               복
             </div>
             <div>
-              <p className="text-sm font-bold">이하늘 복지사</p>
-              <p className="text-xs text-slate-400">창원시 생활지원팀</p>
+              <p className="text-sm font-bold">창원시 생활안전센터</p>
+              <p className="text-xs text-slate-400">기관 관리자</p>
             </div>
           </div>
           <div className="flex justify-between border-t border-white/10 pt-3 text-xs">
-            <span className="text-slate-400">담당 대상자</span>
+            <span className="text-slate-400">관리 대상자</span>
             <b>48명</b>
           </div>
         </div>

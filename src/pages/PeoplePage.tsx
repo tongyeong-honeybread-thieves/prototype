@@ -11,12 +11,12 @@ import type { Person, Risk } from "../types";
 import { PersonRow } from "../components/people/PersonRow";
 import { RiskBadge } from "../components/ui/RiskBadge";
 
-export function PeoplePage({ onSelect, resolvedPersonIds }: { onSelect: (p: Person) => void; resolvedPersonIds: Set<number> }) {
+export function PeoplePage({ onSelect, resolvedPersonIds, assignments }: { onSelect: (p: Person) => void; resolvedPersonIds: Set<number>; assignments: Record<number, string> }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Risk | "전체">("전체");
   const [district, setDistrict] = useState("전체 지역");
   const [view, setView] = useState<"list" | "grid">("list");
-  const effectivePeople = useMemo(() => people.map(person => resolvedPersonIds.has(person.id) ? { ...person, risk: "정상" as const } : person), [resolvedPersonIds]);
+  const effectivePeople = useMemo(() => people.map(person => ({ ...person, manager: assignments[person.id] ?? person.manager, ...(resolvedPersonIds.has(person.id) ? { risk: "정상" as const } : {}) })), [assignments, resolvedPersonIds]);
   const shown = useMemo(
     () =>
       effectivePeople.filter(
@@ -135,7 +135,7 @@ export function PeoplePage({ onSelect, resolvedPersonIds }: { onSelect: (p: Pers
                 {p.reason}
               </p>
               <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-                <span className="text-slate-400">마지막 활동</span>
+                <span className="text-slate-400">담당 {p.manager} 복지사</span>
                 <b>{p.lastActive}</b>
               </div>
             </button>

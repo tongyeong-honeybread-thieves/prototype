@@ -103,7 +103,7 @@ export function PersonDetailPage({
           ) : (
             <div className="mt-5 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-800">
               <CircleCheck size={20} />
-              전화 확인을 완료했어요. 오늘 11:24 · 이하늘 복지사
+              전화 확인을 완료했어요. 오늘 11:24 · {person.manager} 복지사
             </div>
           )}
         </div>
@@ -213,6 +213,11 @@ export function PersonDetailPage({
           </section>
           <section className="card p-5 transition hover:-translate-y-0.5 hover:shadow-md">
             <h3 className="font-extrabold">담당자 메모</h3>
+            <div className="mt-3 flex items-center gap-2 rounded-xl border border-brand-100 bg-brand-50 p-3 text-sm">
+              <UserRound size={17} className="text-brand-600" />
+              <span className="text-slate-500">담당 복지사</span>
+              <b className="ml-auto text-brand-800">{person.manager}</b>
+            </div>
             <p className="mt-3 rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600">
               {person.note}
             </p>
@@ -238,7 +243,7 @@ export function PersonDetailPage({
             {
               time: "어제 16:10",
               title: "안부 확인 완료",
-              desc: "이하늘 복지사 · 전화 확인",
+              desc: `${person.manager} 복지사 · 전화 확인`,
               icon: CircleCheck,
             },
           ].map(({ time, title, desc, icon: Icon }) => (

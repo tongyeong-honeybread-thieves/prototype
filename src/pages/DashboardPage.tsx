@@ -4,7 +4,7 @@ import type { Page, Person, Risk } from "../types";
 import { riskStyle } from "../constants/ui";
 import { SafetyMap } from "../components/map/SafetyMap";
 import { PersonRow } from "../components/people/PersonRow";
-import { LiveSignalPanel } from "../components/dashboard/LiveSignalPanel";
+import { PowerSummaryCard } from "../components/dashboard/PowerSummaryCard";
 import { EmergencyTestModal } from "../components/alerts/EmergencyTestModal";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
@@ -69,7 +69,7 @@ export function DashboardPage({
         <div>
           <p className="text-sm text-slate-500">2026년 7월 15일 수요일</p>
           <h3 className="mt-1 text-2xl font-extrabold tracking-tight">
-            좋은 아침이에요, 이하늘 복지사님
+            창원시 생활안전 관리 현황
           </h3>
         </div>
         <p className="text-sm font-medium text-slate-500">
@@ -113,7 +113,6 @@ export function DashboardPage({
           </button>
         ))}
       </motion.section>
-      <motion.div variants={introItem}><LiveSignalPanel onSelect={onSelect} resolvedPersonIds={resolvedPersonIds} /></motion.div>
       <motion.section variants={introItem} className="grid gap-5 xl:grid-cols-[1.45fr_.85fr]">
         <div className="card overflow-hidden transition hover:shadow-lg">
           <div className="flex items-center justify-between px-5 py-4">
@@ -188,6 +187,7 @@ export function DashboardPage({
           <div className="h-full rounded-full bg-brand-500 transition-all duration-500 group-hover:bg-brand-600" style={{ width: `${Math.min(100, Math.round((32 + resolvedPersonIds.size) / 48 * 100))}%` }} />
         </div>
       </motion.button>
+      <motion.div variants={introItem}><PowerSummaryCard onSelect={onSelect} setPage={setPage} resolvedPersonIds={resolvedPersonIds} /></motion.div>
     </motion.div>
   );
 }

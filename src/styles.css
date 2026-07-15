@@ -105,6 +105,11 @@
 .siren-lightbar i:last-child { background: #2563eb; animation: lightbar-right .8s steps(1,end) infinite; }
 .emergency-badge { border: 1px solid rgba(255,255,255,.7); box-shadow: 0 0 0 3px rgba(225,29,72,.14); }
 .emergency-siren-icon { animation: siren-wiggle .55s ease-in-out infinite; }
+@keyframes vital-scan { from { transform: translateX(-12px); opacity: 0; } 15% { opacity: .75; } 85% { opacity: .5; } to { transform: translateX(680px); opacity: 0; } }
+@keyframes vital-dot { 0%,100% { opacity: 1; r: 4.2px; } 50% { opacity: .42; r: 7px; } }
+.vital-monitor { box-shadow: inset 0 0 24px rgba(6,182,212,.05); }
+.vital-scan-line { position: absolute; inset: 0 auto 0 0; width: 28px; background: linear-gradient(90deg,transparent,rgba(103,232,249,.22),transparent); animation: vital-scan 2.8s linear infinite; pointer-events: none; }
+.vital-current-dot { animation: vital-dot 1.1s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 @media (prefers-reduced-motion: reduce) {
-  .emergency-row, .emergency-modal, .emergency-modal::before, .siren-lightbar i, .emergency-siren-icon { animation: none; }
+  .emergency-row, .emergency-modal, .emergency-modal::before, .siren-lightbar i, .emergency-siren-icon, .vital-scan-line, .vital-current-dot { animation: none; }
 }

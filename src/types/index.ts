@@ -1,5 +1,5 @@
 export type Risk = "긴급" | "주의" | "관심" | "정상";
-export type Page = "dashboard" | "map" | "people" | "alerts";
+export type Page = "dashboard" | "map" | "power" | "people" | "assignments" | "alerts";
 export type AlertStatus = "미처리" | "확인 중" | "완료";
 
 export interface Person {
@@ -45,4 +45,10 @@ export interface LiveMeasurement {
   receivedAt: Date
   reason: string
   changed: boolean
+}
+
+export interface LivePowerPoint {
+  timestamp: number
+  label: string
+  watts: number
 }
