@@ -1,6 +1,7 @@
 import {
   ChevronLeft,
   ChevronRight,
+  ChartNoAxesColumnIncreasing,
   Grid2X2,
   LayoutGrid,
   Maximize2,
@@ -16,6 +17,7 @@ import { useLiveMeasurements } from '../hooks/useLiveMeasurements'
 import type { LivePowerPoint, Person, Risk } from '../types'
 
 type GridSize = 4 | 9 | 16
+type ChartMode = 'live' | 'compare'
 
 const riskOrder: Record<Risk, number> = { 긴급: 0, 주의: 1, 관심: 2, 정상: 3 }
 
@@ -26,23 +28,37 @@ const riskColor: Record<Risk, string> = {
   정상: '#059669',
 }
 
-function PowerBars({ data, risk }: { data: LivePowerPoint[]; risk: Risk }) {
+function PowerBars({ data, risk, baseline, compare, personId }: { data: LivePowerPoint[]; risk: Risk; baseline: number; compare: boolean; personId: number }) {
   const recent = data.slice(-20)
-  const max = Math.max(...recent.map((point) => point.watts), 1)
+  const usual = recent.map((_, index) => {
+    const morningWave = Math.sin((index + personId * 0.73) / 2.8) * 0.12
+    const applianceWave = Math.cos((index + personId * 1.17) / 1.65) * 0.065
+    return baseline * (0.88 + morningWave + applianceWave)
+  })
+  const max = Math.max(...recent.map((point) => point.watts), ...(compare ? usual : [1]), 1)
 
   return (
-    <div className="flex h-16 items-end gap-1 rounded-xl border border-slate-100 bg-slate-50 px-2.5 pb-2.5 pt-3 sm:h-[72px]">
-      {recent.map((point, index) => (
-        <span
-          key={`${point.timestamp}-${index}`}
-          className="min-h-1 flex-1 rounded-t-sm transition-[height] duration-500"
-          style={{
-            height: `${Math.max(7, (point.watts / max) * 100)}%`,
-            backgroundColor: riskColor[risk],
-            opacity: index === recent.length - 1 ? 1 : 0.58,
-          }}
-        />
-      ))}
+    <div className="relative h-16 overflow-hidden rounded-xl border border-slate-100 bg-slate-50 sm:h-[72px]">
+      <div className="absolute inset-0 flex items-end gap-1 px-2.5 pb-2.5 pt-3">
+        {recent.map((point, index) => (
+          <span key={`${point.timestamp}-${index}`} className="flex h-full min-w-0 flex-1 items-end justify-center gap-px">
+            {compare && (
+              <i
+                className="min-h-1 w-1/2 rounded-t-sm bg-slate-400/65 transition-[height] duration-500"
+                style={{ height: `${Math.max(7, (usual[index] / max) * 100)}%` }}
+              />
+            )}
+            <i
+              className={`${compare ? 'w-1/2' : 'w-full'} min-h-1 rounded-t-sm transition-[height] duration-500`}
+              style={{
+                height: `${Math.max(7, (point.watts / max) * 100)}%`,
+                backgroundColor: riskColor[risk],
+                opacity: index === recent.length - 1 ? 1 : 0.68,
+              }}
+            />
+          </span>
+        ))}
+      </div>
     </div>
   )
 }
@@ -53,6 +69,7 @@ function MonitoringCard({
   watts,
   deviation,
   baseline,
+  chartMode,
   selected,
   onFocus,
   onDetail,
@@ -62,6 +79,7 @@ function MonitoringCard({
   watts: number
   deviation: number
   baseline: number
+  chartMode: ChartMode
   selected: boolean
   onFocus: () => void
   onDetail: () => void
@@ -109,8 +127,21 @@ function MonitoringCard({
       </div>
 
       <div className="border-t border-slate-100 px-4 pb-4 pt-3">
-        <p className="mb-2 text-[11px] font-bold text-slate-600">최근 1분 전력 변화</p>
-        <PowerBars data={data} risk={person.risk} />
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-[11px] font-bold text-slate-600">최근 1분 전력 변화</p>
+          {chartMode === 'compare' && (
+            <div className="flex items-center gap-2 text-[9px] text-slate-400">
+              <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm" style={{ backgroundColor: riskColor[person.risk] }} />현재</span>
+              <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm bg-slate-400" />평소</span>
+            </div>
+          )}
+        </div>
+        <PowerBars data={data} risk={person.risk} baseline={baseline} compare={chartMode === 'compare'} personId={person.id} />
+        {chartMode === 'compare' && (
+          <p className={`mt-2 text-right text-[10px] font-bold ${deviation < 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+            평소보다 {Math.abs(deviation).toFixed(1)}% {deviation < 0 ? '낮음' : '높음'}
+          </p>
+        )}
       </div>
 
       <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/50 px-4 py-2.5 text-[10px]">
@@ -143,6 +174,7 @@ export function PowerMonitoringPage({
   const [risk, setRisk] = useState<Risk | '전체'>('전체')
   const [district, setDistrict] = useState('전체 지역')
   const [gridSize, setGridSize] = useState<GridSize>(9)
+  const [chartMode, setChartMode] = useState<ChartMode>('live')
   const [page, setPage] = useState(0)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [selectorOpen, setSelectorOpen] = useState(false)
@@ -306,6 +338,17 @@ export function PowerMonitoringPage({
             </div>
           </div>
 
+          <div className="mb-3 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
+            <div>
+              <b className="text-xs text-slate-800">차트 표시</b>
+              <span className="ml-2 hidden text-[10px] text-slate-400 sm:inline">현재 측정값과 개인별 평소 패턴을 비교하세요</span>
+            </div>
+            <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+              <button onClick={() => setChartMode('live')} className={`rounded-md px-3 py-1.5 text-[11px] font-bold transition ${chartMode === 'live' ? 'bg-white text-brand-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>실시간만</button>
+              <button onClick={() => setChartMode('compare')} className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-[11px] font-bold transition ${chartMode === 'compare' ? 'bg-white text-brand-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}><ChartNoAxesColumnIncreasing size={13} />평소 비교</button>
+            </div>
+          </div>
+
           {visible.length ? (
             <div className={`grid gap-3 ${
               gridSize === 4
@@ -325,6 +368,7 @@ export function PowerMonitoringPage({
                     watts={measurement.watts}
                     deviation={measurement.deviationPercent}
                     baseline={measurement.baselineWatts}
+                    chartMode={chartMode}
                     selected={selectedId === person.id}
                     onFocus={() => setSelectedId(person.id)}
                     onDetail={() => onSelect(person)}
