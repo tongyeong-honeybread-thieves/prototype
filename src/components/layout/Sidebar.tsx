@@ -48,14 +48,16 @@ export function Sidebar({
             onClick={() => setPage("dashboard")}
             className="group flex items-center gap-3 text-left"
           >
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-brand-600 text-white shadow-sm transition group-hover:-rotate-3 group-hover:scale-105 group-hover:bg-brand-700">
-              <ShieldCheck size={22} />
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-[0_8px_20px_rgba(5,150,105,0.22)] transition group-hover:-rotate-3 group-hover:scale-105">
+              <ShieldCheck size={25} strokeWidth={2.2} />
             </div>
-            <div>
-              <p className="text-[11px] font-bold text-brand-600">
-                생활안전 모니터링
+            <div className="min-w-0">
+              <h1 className="brand-wordmark text-[26px] font-black leading-none text-slate-900 transition group-hover:text-brand-700">
+                하루결
+              </h1>
+              <p className="mt-1.5 whitespace-nowrap text-[9px] font-medium tracking-[-0.01em] text-slate-400">
+                매일의 생활 흔적을 이어 안전으로
               </p>
-              <h1 className="font-extrabold tracking-tight">하루결</h1>
             </div>
           </button>
           <button

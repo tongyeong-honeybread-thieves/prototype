@@ -22,6 +22,11 @@
   .focus-ring {
     @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
   }
+  .brand-wordmark {
+    font-family: "Noto Serif KR", "Nanum Myeongjo", Georgia, serif;
+    letter-spacing: -0.08em;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
 }
 
 .leaflet-container {
